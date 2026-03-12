@@ -23,6 +23,7 @@ export interface DoctorResult {
   specialty: string;
   licenseNumber: string;
   clinicAddress: string;
+  doctorImage?: string;
   specialtyId: number | null;
   Specialty: Specialty | null;
   DoctorAvailabilities: DoctorAvailability[];

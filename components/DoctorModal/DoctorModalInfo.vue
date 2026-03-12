@@ -38,7 +38,7 @@ const { specialtyName, scheduleText, billingText } =
 
     <div :class="className.imageWrapper">
       <img
-        src="https://cdn-icons-png.flaticon.com/512/1021/1021799.png"
+        :src="doctor.doctorImage"
         alt="Doctor"
         :class="className.image"
       />

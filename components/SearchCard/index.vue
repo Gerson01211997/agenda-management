@@ -11,7 +11,7 @@ const emit = defineEmits<{ (e: "open-detail", doctor: DoctorResult): void }>();
 <template>
   <div>
     <img
-      src="https://cdn-icons-png.flaticon.com/512/1021/1021799.png"
+      :src="doctor.doctorImage"
       :alt="`Dr. ${doctor.firstName} ${doctor.lastName}`"
       class="w-full h-48 object-contain bg-gray-50 p-4"
     />
