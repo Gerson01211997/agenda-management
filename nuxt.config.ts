@@ -8,13 +8,18 @@ export default defineNuxtConfig({
   },
   headlessui: {
     prefix: 'Headless'
-    },
+  },
   typescript: {
-      typeCheck: false
-    },
-    imports: {
-      dirs: ['./utils/types']
-    },
+    typeCheck: false
+  },
+  imports: {
+    dirs: ['./utils/types']
+  },
+  runtimeConfig: {
+    public: {
+      apiBase: process.env.NUXT_PUBLIC_API_BASE || 'http://localhost:4000'
+    }
+  },
   vite: {
     server: {
       host: true,

@@ -1,42 +1,31 @@
 <script setup lang="ts">
-import { defineProps } from 'vue';
-
-interface Doctor {
-  id: number;
-  name: string;
-  specialty: string;
-  location: string;
-  rating: number;
-  reviewCount: number;
-  imageSrc: string;
-  imageAlt: string;
-  fee: string;
-  href: string;
-}
+import type { DoctorResult } from "@/utils/types/search";
 
 const props = defineProps<{
-  doctor: Doctor;
+  doctor: DoctorResult;
 }>();
+
+const emit = defineEmits<{ (e: "open-detail", doctor: DoctorResult): void }>();
 </script>
 
 <template>
   <div>
     <img
-      :src="doctor.imageSrc"
-      :alt="doctor.imageAlt"
-      class="w-full h-48 object-cover"
+      src="https://cdn-icons-png.flaticon.com/512/1021/1021799.png"
+      :alt="`Dr. ${doctor.firstName} ${doctor.lastName}`"
+      class="w-full h-48 object-contain bg-gray-50 p-4"
     />
     <div class="p-6">
       <h3 class="text-xl font-semibold text-gray-900">
-        {{ doctor.name }}
+        Dr. {{ doctor.firstName }} {{ doctor.lastName }}
       </h3>
-      <p class="mt-2 text-gray-600">{{ doctor.specialty }}</p>
-      <p class="mt-2 text-gray-600">{{ doctor.location }}</p>
-      <p class="mt-2 text-gray-600">Rating: {{ doctor.rating }} ({{ doctor.reviewCount }} reviews)</p>
-      <p class="mt-2 text-gray-600">Fee: {{ doctor.fee }}</p>
+      <p class="mt-2 text-gray-600">
+        {{ doctor.specialty || doctor.Specialty?.specialtyName || "Sin especialidad" }}
+      </p>
       <a
-        :href="doctor.href"
+        href="#"
         class="block mt-4 text-indigo-500 hover:underline"
+        @click.prevent="emit('open-detail', doctor)"
       >
         Ver más detalles
       </a>

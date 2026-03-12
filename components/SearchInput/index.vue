@@ -10,28 +10,32 @@ const props = defineProps<{ doctorsCount: number }>();
 
 const emit = defineEmits<{ (e: "search", form: SearchFormProps): void }>();
 
-const noDoctorsFound = () => {
-  return props.doctorsCount > 0;
-};
-
 const form = reactive<SearchFormProps>({
   searchQuery: "",
 });
 
 const rules = computed(() => ({
-  searchQuery: { minLength: minLength(3), noDoctorsFound },
+  searchQuery: { minLength: minLength(3) },
 }));
 
 const v$ = useVuelidate(rules, form);
+
+const showNoDoctorsFound = computed(() => {
+  return props.doctorsCount === 0 && form.searchQuery.length >= 3;
+});
 
 const handleSubmit = () => {
   v$.value.$validate();
   v$.value.$touch();
 
   if (!v$.value.$error) {
-    console.log("Formulario válido, enviando datos...");
     emit("search", form);
   }
+};
+
+const clipStyle = {
+  clipPath:
+    "polygon(74.1% 44.1%,100% 61.6%,97.5% 26.9%,85.5% 0.1%,80.7% 2%,72.5% 32.5%,60.2% 62.4%,52.4% 68.1%,47.5% 58.3%,45.2% 34.5%,27.5% 76.7%,0.1% 64.9%,17.9% 100%,27.6% 76.8%,76.1% 97.7%,74.1% 44.1%)",
 };
 </script>
 
@@ -51,26 +55,7 @@ const handleSubmit = () => {
       >
         <div
           class="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-[#ff80b5] to-[#9089fc] opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]"
-          style="
-            clip-path: polygon(
-              74.1% 44.1%,
-              100% 61.6%,
-              97.5% 26.9%,
-              85.5% 0.1%,
-              80.7% 2%,
-              72.5% 32.5%,
-              60.2% 62.4%,
-              52.4% 68.1%,
-              47.5% 58.3%,
-              45.2% 34.5%,
-              27.5% 76.7%,
-              0.1% 64.9%,
-              17.9% 100%,
-              27.6% 76.8%,
-              76.1% 97.7%,
-              74.1% 44.1%
-            );
-          "
+          :style="clipStyle"
         />
       </div>
     </div>
@@ -93,17 +78,17 @@ const handleSubmit = () => {
               v-model="form.searchQuery"
               type="text"
               placeholder="Buscar por especialidad, ubicación..."
-              @input="v$.searchQuery.$touch"
+              @input="v$.searchQuery.$touch()"
               :class="{ 'border-red-500': v$.searchQuery.$error }"
-              class="block w-full px-4 py-2 text-gray-900 rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
+              class="block w-full px-4 py-2 text-gray-900 rounded-md shadow-sm"
             />
-            <div v-if="v$.searchQuery.$error" class="text-red-500 text-xs mt-2">
+
+            <div class="text-red-500 text-xs mt-2">
               <p v-if="v$.searchQuery.minLength.$invalid">
                 Debe tener al menos 3 caracteres.
               </p>
-              <p v-if="v$.searchQuery.noDoctorsFound.$invalid">
-                No se encontraron doctores.
-              </p>
+
+              <p v-if="showNoDoctorsFound">No se encontraron doctores.</p>
             </div>
             <button
               type="submit"
